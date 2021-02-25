@@ -9,6 +9,7 @@ class ItemViewStreamEvent(BaseModel):
     deviceId: Optional[str] 
     ipAddress: Optional[str] 
     timestamp: Optional[str]
+    viewId: Optional[str]
 
 @app.post('/')
 async def main(event: ItemViewStreamEvent):
