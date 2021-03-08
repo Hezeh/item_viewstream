@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from pydantic import BaseModel
 from typing import Optional
 from google.cloud import  pubsub_v1
@@ -21,14 +21,14 @@ class ItemViewStreamEvent(BaseModel):
     viewId: Optional[str]
 
 @app.post('/')
-async def main(event: ItemViewStreamEvent):
+async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Header(None)):
     data = {
         "viewId": event.viewId,
         "deviceId" : event.deviceId,
         "itemId": event.itemId,
-        "ipAddress": event.ipAddress,
         "timestamp": event.timestamp,
     }
+    data["ipAddress"] = str(x_forwarded_for)
     data = json.dumps(data).encode('utf-8')
     future = publisher.publish(topic_name, data)
     return future.result()
