@@ -6,7 +6,6 @@ import os
 import json
 
 from confluent_kafka import Producer
-import socket
 
 app = FastAPI()
 
