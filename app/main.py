@@ -54,8 +54,8 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
     }
     data["ipAddress"] = str(x_forwarded_for)
     data = json.dumps(data).encode('utf-8')
-    producer.produce(topic, key=event.viewId, value=data)
-    future = publisher.publish(topic_name, data)
+    # producer.produce(topic, key=event.viewId, value=data)
+    # future = publisher.publish(topic_name, data)
     # Read current value from firestore, save
     doc_ref = db.collection(u'profile').document(f'{event.merchantId}')
 
@@ -71,4 +71,5 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
         }, merge=True)
     else:
         print('No such document!')
-    return future.result()
+    # return future.result()
+    return {"Message": "Done"}
