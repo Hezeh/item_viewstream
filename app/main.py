@@ -30,7 +30,6 @@ conf = {
         'security.protocol': 'SASL_SSL',
         'sasl.username': os.environ.get("USERNAME"),
         'sasl.password': os.environ.get("PASSWORD"),
-        'auto.offset.reset': 'earliest',
     }
 
 producer = Producer(conf)
