@@ -65,10 +65,9 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
         json_doc_data = json.loads(json_dump)
         total_views = json_doc_data["totalViews"]
         new_total_views = int(total_views) + 1
-        doc_ref.set({
+        res = doc_ref.set({
             'totalViews': new_total_views
         }, merge=True)
+        return res
     else:
-        print('No such document!')
-    # return future.result()
-    return {"Message": "Done"}
+        return {"Message": "No such document"}
