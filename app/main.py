@@ -37,8 +37,7 @@ producer = Producer(conf)
 
 class ItemViewStreamEvent(BaseModel):
     itemId: Optional[str]
-    deviceId: Optional[str] 
-    ipAddress: Optional[str] 
+    deviceId: Optional[str]
     timestamp: Optional[str]
     viewId: Optional[str]
     merchantId: Optional[str]
