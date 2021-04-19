@@ -55,8 +55,6 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
         "type": event.type,
     }
     data["ipAddress"] = str(x_forwarded_for)
-    data = json.dumps(data).encode('utf-8')
-    print(data)
     # Publish to Pub/Sub
     topic_name = f'projects/{project_id}/topics/item-viewstream'
     data = json.dumps(data).encode('utf-8')
