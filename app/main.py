@@ -42,6 +42,7 @@ class ItemViewStreamEvent(BaseModel):
     viewId: Optional[str]
     merchantId: Optional[str]
     searchQuery: Optional[str]
+    index: Optional[str]
 
 @app.post('/')
 async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Header(None)):
@@ -51,10 +52,12 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
         "itemId": event.itemId,
         "timestamp": event.timestamp,
         "merchantId": event.merchantId,
-        "searchQuery": event.searchQuery
+        "searchQuery": event.searchQuery,
+        "index": event.index
     }
     data["ipAddress"] = str(x_forwarded_for)
     data = json.dumps(data).encode('utf-8')
+    print(data)
     return {"Message": "Done"}
     # producer.produce(topic, key=event.viewId, value=data)
     # future = publisher.publish(topic_name, data)
