@@ -41,6 +41,7 @@ class ItemViewStreamEvent(BaseModel):
     timestamp: Optional[str]
     viewId: Optional[str]
     merchantId: Optional[str]
+    searchQuery: Optional[str]
 
 @app.post('/')
 async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Header(None)):
@@ -50,24 +51,26 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
         "itemId": event.itemId,
         "timestamp": event.timestamp,
         "merchantId": event.merchantId,
+        "searchQuery": event.searchQuery
     }
     data["ipAddress"] = str(x_forwarded_for)
     data = json.dumps(data).encode('utf-8')
+    return {"Message": "Done"}
     # producer.produce(topic, key=event.viewId, value=data)
     # future = publisher.publish(topic_name, data)
     # Read current value from firestore, save
-    doc_ref = db.collection(u'profile').document(f'{event.merchantId}')
+    # doc_ref = db.collection(u'profile').document(f'{event.merchantId}')
 
-    doc = doc_ref.get()
-    if doc.exists:
-        doc_data = doc.to_dict()
-        json_dump = json.dumps(doc_data)
-        json_doc_data = json.loads(json_dump)
-        total_views = json_doc_data["totalViews"]
-        new_total_views = int(total_views) + 1
-        res = doc_ref.set({
-            'totalViews': new_total_views
-        }, merge=True)
-        return res
-    else:
-        return {"Message": "No such document"}
+    # doc = doc_ref.get()
+    # if doc.exists:
+    #     doc_data = doc.to_dict()
+    #     json_dump = json.dumps(doc_data)
+    #     json_doc_data = json.loads(json_dump)
+    #     total_views = json_doc_data["totalViews"]
+    #     new_total_views = int(total_views) + 1
+    #     res = doc_ref.set({
+    #         'totalViews': new_total_views
+    #     }, merge=True)
+    #     return res
+    # else:
+    #     return {"Message": "No such document"}
