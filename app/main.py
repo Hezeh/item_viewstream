@@ -13,9 +13,6 @@ app = FastAPI()
 
 publisher = pubsub_v1.PublisherClient()
 project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
-topic = os.getenv('TOPIC_NAME')
-topic_name = f'projects/{project_id}/topics/{topic}'
-
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred, {
@@ -60,22 +57,8 @@ async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Head
     data["ipAddress"] = str(x_forwarded_for)
     data = json.dumps(data).encode('utf-8')
     print(data)
-    return {"Message": "Done"}
-    # producer.produce(topic, key=event.viewId, value=data)
-    # future = publisher.publish(topic_name, data)
-    # Read current value from firestore, save
-    # doc_ref = db.collection(u'profile').document(f'{event.merchantId}')
-
-    # doc = doc_ref.get()
-    # if doc.exists:
-    #     doc_data = doc.to_dict()
-    #     json_dump = json.dumps(doc_data)
-    #     json_doc_data = json.loads(json_dump)
-    #     total_views = json_doc_data["totalViews"]
-    #     new_total_views = int(total_views) + 1
-    #     res = doc_ref.set({
-    #         'totalViews': new_total_views
-    #     }, merge=True)
-    #     return res
-    # else:
-    #     return {"Message": "No such document"}
+    # Publish to Pub/Sub
+    topic_name = f'projects/{project_id}/topics/item-viewstream'
+    data = json.dumps(data).encode('utf-8')
+    future = publisher.publish(topic_name, data)
+    return future.result()
