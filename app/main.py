@@ -44,16 +44,23 @@ class ItemViewStreamEvent(BaseModel):
 
 @app.post('/')
 async def main(event: ItemViewStreamEvent, x_forwarded_for: Optional[str] = Header(None)):
-    data = {
-        "viewId": event.viewId,
-        "deviceId" : event.deviceId,
-        "itemId": event.itemId,
-        "timestamp": event.timestamp,
-        "merchantId": event.merchantId,
-        "searchQuery": event.searchQuery,
-        "index": event.index,
-        "type": event.type,
-    }
+    data = {}
+    if event.viewId != None:
+        data["viewId"] = event.viewId
+    if event.deviceId != None:
+        data["deviceId"] = event.deviceId
+    if event.itemId != None:
+        data["itemId"] = event.itemId
+    if event.timestamp != None:
+        data["timestamp"] = event.timestamp
+    if event.merchantId != None:
+        data["merchantId"] = event.merchantId
+    if event.searchQuery != None:
+        data["searchQuery"] = event.searchQuery
+    if event.index != None:
+        data["index"] = event.index
+    if event.type != None:
+        data["type"] = event.type
     data["ipAddress"] = str(x_forwarded_for)
     # Publish to Pub/Sub
     topic_name = f'projects/{project_id}/topics/item-viewstream'
